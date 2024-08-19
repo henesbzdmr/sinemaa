@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <title>Kapsül Sinemaları</title>
+</head>
+<body>
+    <h1>Kapsül Sinemaları</h1>
+    <div class="container">
+        <!-- Film Seçimi -->
+        <div class="film-selection">
+            <h2>Film Seç</h2>
+            <img src="img/330px-Avengersendgame.jpg" alt="Film 1" onclick="selectFilm('Film 1')">
+            <img src="img/29276.jpg-c_310_420_x-f_jpg-q_x-xxyxx.jpg" alt="Film 2" onclick="selectFilm('Film 2')">
+            <img src="img/29173.png" alt="Film 3" onclick="selectFilm('Film 3')">
+        </div>
+
+        <!-- Bilet Seçimi -->
+        <div class="bilet-selection">
+            <h2>Bilet Seçimi</h2>
+
+            <!-- Sinema Seç -->
+            <div id="sinemaSec" class="hidden">
+                <label for="sinema">Sinema Seç:</label>
+                <select id="sinema" onchange="loadDates()">
+                    <option value="">Seçin</option>
+                </select>
+            </div>
+
+            <!-- Tarih Seç -->
+            <div id="tarihSec" class="hidden">
+                <label for="tarih">Tarih Seç:</label>
+                <select id="tarih" onchange="loadSalonSaat()">
+                    <option value="">Seçin</option>
+                </select>
+            </div>
+
+            <!-- Salon-Saat Seç -->
+            <div id="salonSaatSec" class="hidden">
+                <label for="salonSaat">Salon-Saat Seç:</label>
+                <select id="salonSaat" onchange="loadKoltuk()">
+                    <option value="">Seçin</option>
+                </select>
+            </div>
+
+            <!-- Koltuk Seç -->
+            <div id="koltukSec" class="hidden">
+                <label for="koltuk">Koltuk Seç:</label>
+                <select id="koltuk">
+                    <option value="">Seçin</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Kaydet ve Görüntüle -->
+        <button class="kaydet-button" onclick="kaydetVeGoruntule()">Kaydet ve Görüntüle</button>
+
+        <!-- Temizle -->
+        <button id="temizleButton" class="hidden" onclick="temizle()">Temizle</button>
+
+        <!-- Bilet Bilgileri -->
+        <div id="biletBilgileri" class="bilet-bilgileri hidden">
+            <h3>Bilet Bilgileri</h3>
+            <p>Film: <span id="seciliFilm"></span></p>
+            <p>Sinema: <span id="seciliSinema"></span></p>
+            <p>Tarih: <span id="seciliTarih"></span></p>
+            <p>Salon-Saat: <span id="seciliSalonSaat"></span></p>
+            <p>Koltuk: <span id="seciliKoltuk"></span></p>
+        </div>
+    </div>
+
+    <script>
+        let filmSinemaVerileri = {
+            'Film 1': ['Konya- Kule Site', 'Alanya- Alanyum', 'Afyon- Park Afyon'],
+            'Film 2': ['Konya- Kent Plaza', 'Kütahya- Sera', 'Denizli- Teras'],
+            'Film 3': ['Ankara- Optimum', 'Konya- Real', 'Konya- Kule Site']
+        };
+        let sinemaTarihVerileri = {
+            'Konya- Kule Site': ['08.08.2024', '09.08.2024', '10.08.2024'],
+            'Alanya- Alanyum': ['08.08.2024', '09.08.2024', '10.08.2024'],
+            'Afyon- Park Afyon': ['08.08.2024', '09.08.2024', '10.08.2024'],
+            'Konya- Kent Plaza': ['08.08.2024', '09.08.2024', '10.08.2024'],
+            'Kütahya- Sera': ['08.08.2024', '09.08.2024', '10.08.2024'],
+            'Denizli- Teras': ['08.08.2024', '09.08.2024', '10.08.2024'],
+            'Ankara- Optimum': ['08.08.2024', '09.08.2024', '10.08.2024'],
+            'Konya- Real': ['08.08.2024', '09.08.2024', '10.08.2024'],
+            'Konya- Kule Site': ['08.08.2024', '09.08.2024', '10.08.2024']
+        };
+        let tarihSalonSaatVerileri = {
+            '08.08.2024': ['Salon 1, 15:00', 'Salon 3, 19:00', 'Salon 1, 19:00', 'Salon 4, 10:00'],
+            '09.08.2024': ['Salon 1, 15:00', 'Salon 3, 19:00', 'Salon 1, 19:00', 'Salon 4, 10:00'],
+            '10.08.2024': ['Salon 1, 15:00', 'Salon 3, 19:00', 'Salon 1, 19:00', 'Salon 4, 10:00']
+        };
+        let salonSaatKoltukVerileri = {
+            'Salon 1, 15:00': ['2. sıra 3. koltuk', '4. sıra 5. koltuk', '1. sıra 6. koltuk', '5. sıra 3. koltuk'],
+            'Salon 3, 19:00': ['3. sıra 7. koltuk', '2. sıra 9. koltuk', '8. sıra 1. koltuk', '1. sıra 5. koltuk'],
+            'Salon 1, 19:00': ['7. sıra 2. koltuk', '8. sıra 7. koltuk', '9. sıra 5. koltuk', '6. sıra 7. koltuk'],
+            'Salon 4, 10:00': ['2. sıra 4. koltuk', '6. sıra 2. koltuk', '5. sıra 4. koltuk', '1. sıra 6. koltuk']
+        };
+
+        let secilenFilm = '';
+        let secilenSinema = '';
+        let secilenTarih = '';
+        let secilenSalonSaat = '';
+        let secilenKoltuk = '';
+
+        function selectFilm(film) {
+            secilenFilm = film;
+
+            // Tıklanan filme kırmızı çerçeve eklemek
+            let filmImages = document.querySelectorAll('.film-selection img');
+            filmImages.forEach(img => img.classList.remove('selected')); // Önceki seçimi kaldır
+            let selectedImg = document.querySelector(`img[alt="${film}"]`);
+            selectedImg.classList.add('selected'); // Seçili filme kırmızı çerçeve ekle
+
+            document.getElementById('sinemaSec').classList.remove('hidden');
+            let sinemaSelect = document.getElementById('sinema');
+            sinemaSelect.innerHTML = '<option value="">Seçin</option>';
+            filmSinemaVerileri[film].forEach(sinema => {
+                let option = document.createElement('option');
+                option.value = sinema;
+                option.textContent = sinema;
+                sinemaSelect.appendChild(option);
+            });
+
+            document.getElementById('tarihSec').classList.add('hidden');
+            document.getElementById('salonSaatSec').classList.add('hidden');
+            document.getElementById('koltukSec').classList.add('hidden');
+            document.getElementById('temizleButton').classList.remove('hidden'); // Temizle butonunu göster
+        }
+
+        function loadDates() {
+            let sinema = document.getElementById('sinema').value;
+            secilenSinema = sinema;
+
+            if (sinema !== '') {
+                document.getElementById('tarihSec').classList.remove('hidden');
+                let tarihSelect = document.getElementById('tarih');
+                tarihSelect.innerHTML = '<option value="">Seçin</option>';
+                sinemaTarihVerileri[sinema].forEach(tarih => {
+                    let option = document.createElement('option');
+                    option.value = tarih;
+                    option.textContent = tarih;
+                    tarihSelect.appendChild(option);
+                });
+            } else {
+                document.getElementById('tarihSec').classList.add('hidden');
+                document.getElementById('salonSaatSec').classList.add('hidden');
+                document.getElementById('koltukSec').classList.add('hidden');
+            }
+        }
+
+        function loadSalonSaat() {
+            let tarih = document.getElementById('tarih').value;
+            secilenTarih = tarih;
+
+            if (tarih !== '') {
+                document.getElementById('salonSaatSec').classList.remove('hidden');
+                let salonSaatSelect = document.getElementById('salonSaat');
+                salonSaatSelect.innerHTML = '<option value="">Seçin</option>';
+                tarihSalonSaatVerileri[tarih].forEach(salonSaat => {
+                    let option = document.createElement('option');
+                    option.value = salonSaat;
+                    option.textContent = salonSaat;
+                    salonSaatSelect.appendChild(option);
+                });
+            } else {
+                document.getElementById('salonSaatSec').classList.add('hidden');
+                document.getElementById('koltukSec').classList.add('hidden');
+            }
+        }
+
+        function loadKoltuk() {
+            let salonSaat = document.getElementById('salonSaat').value;
+            secilenSalonSaat = salonSaat;
+
+            if (salonSaat !== '') {
+                document.getElementById('koltukSec').classList.remove('hidden');
+                let koltukSelect = document.getElementById('koltuk');
+                koltukSelect.innerHTML = '<option value="">Seçin</option>';
+                salonSaatKoltukVerileri[salonSaat].forEach(koltuk => {
+                    let option = document.createElement('option');
+                    option.value = koltuk;
+                    option.textContent = koltuk;
+                    koltukSelect.appendChild(option);
+                });
+            } else {
+                document.getElementById('koltukSec').classList.add('hidden');
+            }
+        }
+
+        function kaydetVeGoruntule() {
+            secilenKoltuk = document.getElementById('koltuk').value;
+
+            document.getElementById('biletBilgileri').classList.remove('hidden');
+            document.getElementById('seciliFilm').textContent = secilenFilm;
+            document.getElementById('seciliSinema').textContent = secilenSinema;
+            document.getElementById('seciliTarih').textContent = secilenTarih;
+            document.getElementById('seciliSalonSaat').textContent = secilenSalonSaat;
+            document.getElementById('seciliKoltuk').textContent = secilenKoltuk;
+        }
+
+        function temizle() {
+            document.getElementById('sinemaSec').classList.add('hidden');
+            document.getElementById('tarihSec').classList.add('hidden');
+            document.getElementById('salonSaatSec').classList.add('hidden');
+            document.getElementById('koltukSec').classList.add('hidden');
+            document.getElementById('biletBilgileri').classList.add('hidden');
+            document.getElementById('temizleButton').classList.add('hidden');
+            let filmImages = document.querySelectorAll('.film-selection img');
+            filmImages.forEach(img => img.classList.remove('selected'));
+        }
+    </script>
+</body>
+</html>

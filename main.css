@@ -1,0 +1,110 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-image: url('img/cinema-bachground.png');
+    background-size: cover; /* Resmin ekranı tamamen kaplaması için */
+    background-position: center; /* Resmi ortalamak için */
+    background-attachment: fixed; /* Arka planın kaydırma yaparken sabit kalmasını sağlar */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #333;
+}
+
+h1, h2 {
+    color: #f4d6d6;
+}
+
+h1 {
+    margin-top: 20px;
+    font-size: 60px;
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+h2 {
+    font-family: "Arvo", serif;
+    color: black;
+    font-size: 27px;
+}
+
+.container {
+    width: 70%;
+    max-width: 900px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.film-selection, .bilet-selection, .bilet-bilgileri {
+    margin-bottom: 20px;
+}
+
+.film-selection img {
+    width: 200px;
+    height: 300px; /* Boyutları eşitlemek için height özelliği eklendi */
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 10px;
+    object-fit: cover; /* Resmi kutuya sığdırmak için */
+}
+
+.film-selection img.selected {
+    border: 5px solid red; /* Çerçeve kalınlığı artırıldı */
+}
+
+.bilet-selection select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.hidden {
+    display: none;
+}
+
+.kaydet-button {
+    background-color: #E37427;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.kaydet-button:hover {
+    background-color: #B9551F;
+}
+
+.bilet-bilgileri {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.bilet-bilgileri p {
+    margin: 5px 0;
+}
+
+.bilet-bilgileri span {
+    font-weight: bold;
+}
+
+#temizleButton {
+    margin-top: 20px;
+    background-color: #E37427;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#temizleButton:hover {
+    background-color: #B9551F;
+}
